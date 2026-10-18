@@ -12,6 +12,8 @@ try {
  page.on('pageerror', error => errors.push(error.message));
  await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:8787');
  await page.getByText('清单已刷新', { exact: true }).waitFor();
+ await page.getByRole('button',{name:'版本',exact:true}).click();
+ await page.getByText('当前 GPT 客户端版本：Error',{exact:true}).waitFor();
  await page.screenshot({ path: 'runtime/preview-desktop.png', fullPage: true });
  await page.getByRole('button', { name: '任务记录', exact: true }).click();
  await page.getByText('还没有分析任务', { exact: true }).waitFor();
@@ -27,14 +29,15 @@ try {
  await page.route('**/__bridge_test', route => route.fulfill({
   contentType: 'text/html',
   body: `<iframe title="workspace" src="/" style="width:100%;height:850px"></iframe><script>
-   window.calls = 0; window.failRefresh = false;
+   window.calls = 0; window.failRefresh = false; window.versionCalls=0;window.currentVersion='26.1013.4894.0';
    addEventListener('message', event => {
     const frame = document.querySelector('iframe');
     if(event.source !== frame.contentWindow) return;
     const m = event.data;
     const reply = result => event.source.postMessage({jsonrpc:'2.0',id:m.id,result}, '*');
-    if(m.method === 'ui/initialize') reply({protocolVersion:'2026-01-26',hostInfo:{name:'test-host',version:'1.0.0'},hostCapabilities:{}});
+    if(m.method === 'ui/initialize') reply({protocolVersion:'2026-01-26',hostInfo:{name:'test-host',version:'1.0.0'},hostCapabilities:{},hostContext:{platform:'desktop'}});
     if(m.method === 'ui/notifications/initialized') event.source.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{software:[{name:'Bridge test fixture',version:'test-only',citation:'Testing only',operations:[]}]}}}, '*');
+    if(m.method === 'tools/call' && m.params.name==='get_client_version'){window.versionCalls++;reply({structuredContent:{clientVersion:m.params.arguments.platform==='web'?'Web':window.currentVersion,pluginVersion:'V1.0'}});return;}
     if(m.method === 'tools/call') { window.calls++; reply(window.failRefresh ? {isError:true,content:[{type:'text',text:'Test refresh failure'}]} : {structuredContent:{software:[]}}); }
    });
   </script>`,
@@ -44,7 +47,18 @@ try {
  await frame.getByText('已连接客户端', { exact: true }).waitFor();
  await frame.getByRole('heading', { name: 'Bridge test fixture', exact: true }).waitFor();
  await frame.getByRole('button', { name: '版本', exact: true }).click();
- await frame.getByText('本机实际版本：test-only', { exact: true }).waitFor();
+ await frame.getByText('当前 GPT 客户端版本：26.1013.4894.0', { exact: true }).waitFor();
+ await frame.getByText('最新稳定版本：V1.0（当前插件版本）', {exact:true}).waitFor();
+ await page.evaluate(()=>{window.currentVersion='26.1014.1000.0'});
+ await frame.getByRole('button',{name:'版本',exact:true}).click();
+ await frame.getByText('当前 GPT 客户端版本：26.1014.1000.0',{exact:true}).waitFor();
+ await page.evaluate(()=>{window.currentVersion='Error'});
+ await frame.getByRole('button',{name:'版本',exact:true}).click();
+ await frame.getByText('当前 GPT 客户端版本：Error',{exact:true}).waitFor();
+ await page.evaluate(()=>document.querySelector('iframe').contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/host-context-changed',params:{platform:'web'}},'*'));
+ await frame.getByRole('button',{name:'版本',exact:true}).click();
+ await frame.getByText('当前 GPT 客户端版本：Web',{exact:true}).waitFor();
+ if(await page.evaluate(()=>window.versionCalls)!==4)throw new Error('Each version click must query exactly once');
  await frame.getByRole('button', {name: '引用论文', exact:true}).click();
  await frame.getByText('Testing only', {exact:true}).waitFor();
  await frame.getByRole('button', {name: '官方地址', exact:true}).click();
