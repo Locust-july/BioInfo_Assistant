@@ -1,0 +1,32 @@
+{
+  "name": "windows-bioinfo-assistant",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "生信小助手 V1.0 开发骨架",
+  "scripts": {
+    "doctor": "node src/cli.mjs",
+    "test": "node --test",
+    "preview": "node src/preview.mjs",
+    "start": "node src/server.mjs",
+    "build": "node scripts/build.mjs",
+    "test:ui": "node scripts/check-ui.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "1.2.2",
+    "@modelcontextprotocol/sdk": "1.26.0",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "packageManager": "pnpm@11.25.0"
+}

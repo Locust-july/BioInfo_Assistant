@@ -1,0 +1,1 @@
+{"name":"bioinfo-local","interface":{"displayName":"生信小助手本地开发"},"plugins":[{"name":"bioinfo-assistant","source":{"source":"local","path":"./"},"policy":{"installation":"AVAILABLE","authentication":"ON_INSTALL"},"category":"Productivity"}]}

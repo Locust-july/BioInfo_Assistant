@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+!.env.example
+config.local.json
+runtime/
+coverage/
+dist/
+*.log

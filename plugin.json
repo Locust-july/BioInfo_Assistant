@@ -1,0 +1,1 @@
+{"$schema":"https://agent-plugins.org/schemas/1.0.0/plugin.schema.json","name":"bioinfo-assistant","version":"0.1.0","description":"生信小助手：软件、版本、引用与任务工作台","extensions":{"com.openai":{"requires_local_executor":true,"interface":{"displayName":"生信小助手","shortDescription":"查看本机生信软件与分析记录","defaultPrompt":["打开生信小助手工作台"]}}}}

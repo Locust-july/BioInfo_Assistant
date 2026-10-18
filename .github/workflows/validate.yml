@@ -1,0 +1,21 @@
+name: Validate
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm run build
+      - name: Test bundled MCP
+        shell: pwsh
+        run: |
+          $env:BIOINFO_TEST_SERVER = 'dist/server.mjs'
+          node --test test/mcp.test.mjs
