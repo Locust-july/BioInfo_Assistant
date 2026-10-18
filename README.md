@@ -60,6 +60,6 @@ GitHub Actions 检查源码测试、构建及构建产物 MCP 调用；不代表
 
 客户端管理插件代码；运行数据默认 `%LOCALAPPDATA%\BioinfoAssistant`，支持绝对路径环境变量 `BIOINFO_ASSISTANT_DATA_DIR`。当前骨架只计算运行数据路径，不创建该目录。
 
-本仓库暂未选定开源许可证。仓库可见性与代码许可是两件事；公开发布前由项目所有者决定许可证。
+本仓库沿用目标仓库已有的 MIT 许可证，详见 LICENSE。
 
 官方接入参考：https://developers.openai.com/plugins/build/plugins
