@@ -60,9 +60,8 @@ try {
  await frame.getByRole('button',{name:'版本',exact:true}).click();
  await frame.getByText('当前 GPT 客户端版本：Web',{exact:true}).waitFor();
  if(await page.evaluate(()=>window.versionCalls)!==4)throw new Error('Each version click must query exactly once');
- await frame.getByRole('button', {name: '引用论文', exact:true}).click();
+ await frame.getByRole('button', {name: '论文与官网', exact:true}).click();
  await frame.getByText('Testing only', {exact:true}).waitFor();
- await frame.getByRole('button', {name: '官方地址', exact:true}).click();
  await frame.getByText('待确认：尚未登记经核验的官网、仓库、文档或下载地址。', {exact:true}).waitFor();
  await frame.getByRole('button', {name: '操作', exact:true}).click();
  await frame.getByText('预留操作页面 · 暂无可执行任务', {exact:true}).waitFor();

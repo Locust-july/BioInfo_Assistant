@@ -19,18 +19,19 @@ function softwareCard(s){
  heading.append(element('h3',s.name),element('span',s.status||'安装状态待确认','software-status'));card.append(heading,element('p',s.description||'暂无软件简介','software-description'));
  const nav=element('div',null,'card-nav');nav.setAttribute('aria-label',s.name+'详情');card.append(nav);
  const sections=[];
- for(const [key,label] of [['papers','引用论文'],['version','版本'],['links','官方地址'],['operations','操作']]){
+ for(const [key,label] of [['papers','论文与官网'],['version','版本'],['operations','操作']]){
   const button=element('button',label);button.setAttribute('aria-expanded','false');const panel=element('section',null,'card-panel');panel.hidden=true;panel.id='panel-'+(++nextId);button.setAttribute('aria-controls',panel.id);panel.append(element('h4',key==='operations'?'操作页面':label));
   button.onclick=()=>{const open=key==='version'||panel.hidden;for(const item of sections){item.panel.hidden=true;item.button.setAttribute('aria-expanded','false')}panel.hidden=!open;button.setAttribute('aria-expanded',String(open));if(key==='version')void updateClientVersion(panel)};
   if(key==='papers'){
+   panel.append(element('h4','引用论文'));
    const papers=s.papers||(s.citation?[{title:s.citation}]:[]);
    if(!papers.length)panel.append(element('p','待确认：尚未登记可靠的官方推荐引用。'));
    for(const paper of papers){const row=element('div',null,'paper');row.append(element('p',paper.title||'标题待确认'),element('p',paper.scope||'适用范围待确认'),copyButton('复制标题',paper.title),copyButton('复制完整引用',paper.citation),copyButton('复制 BibTeX',paper.bibtex));panel.append(row)}
-  }else if(key==='version'){
-   panel.append(element('p','当前 GPT 客户端版本：点击获取','client-version'),element('p','最新稳定版本：V1.0（当前插件版本）'),element('p','每次点击版本，重新获取当前状态。','notice'));
-  }else if(key==='links'){
+   panel.append(element('h4','官方地址'));
    if(!s.links?.length)panel.append(element('p','待确认：尚未登记经核验的官网、仓库、文档或下载地址。'));
    for(const link of s.links||[]){let url;try{url=new URL(link.url);if(!['https:','http:'].includes(url.protocol))continue}catch{continue}const row=element('div',null,'paper');const anchor=element('a',link.label||url.href);anchor.href=url.href;anchor.target='_blank';anchor.rel='noopener noreferrer';row.append(anchor,element('p',url.href),copyButton('复制地址',url.href));panel.append(row)}
+  }else if(key==='version'){
+   panel.append(element('p','当前 GPT 客户端版本：点击获取','client-version'),element('p','最新稳定版本：V1.0（当前插件版本）'),element('p','每次点击版本，重新获取当前状态。','notice'));
   }else{
    panel.append(element('p','预留操作页面 · 暂无可执行任务'),element('p','后续仅展示已适配任务及支持的软件版本；运行后在此提供状态、日志和结果位置。'));
   }
