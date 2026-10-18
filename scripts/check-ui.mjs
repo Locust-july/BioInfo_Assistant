@@ -43,8 +43,14 @@ try {
  const frame = page.frameLocator('iframe');
  await frame.getByText('已连接客户端', { exact: true }).waitFor();
  await frame.getByRole('heading', { name: 'Bridge test fixture', exact: true }).waitFor();
- await frame.getByText('版本', { exact: true }).click();
- await frame.getByText('test-only', { exact: true }).waitFor();
+ await frame.getByRole('button', { name: '版本', exact: true }).click();
+ await frame.getByText('本机实际版本：test-only', { exact: true }).waitFor();
+ await frame.getByRole('button', {name: '引用论文', exact:true}).click();
+ await frame.getByText('Testing only', {exact:true}).waitFor();
+ await frame.getByRole('button', {name: '官方地址', exact:true}).click();
+ await frame.getByText('待确认：尚未登记经核验的官网、仓库、文档或下载地址。', {exact:true}).waitFor();
+ await frame.getByRole('button', {name: '操作', exact:true}).click();
+ await frame.getByText('预留操作页面 · 暂无可执行任务', {exact:true}).waitFor();
  await frame.getByRole('textbox', { name: '搜索软件' }).fill('no-match');
  await frame.getByText('没有匹配的软件', { exact: true }).waitFor();
  await frame.getByRole('textbox', { name: '搜索软件' }).fill('');
