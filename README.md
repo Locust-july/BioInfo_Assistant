@@ -1,6 +1,6 @@
 # 生信小助手
 
-面向 Windows 本地 Work 聊天的生信软件交互插件。目标版本 V1.0，当前为 0.1.0 界面开发版。
+面向 Windows 本地 Work 聊天的生信软件交互插件。目标版本 V1.0，当前为 0.1.1 界面开发版。
 
 当前支持软件清单空状态、搜索、详情组件、任务记录空状态、关于页面，以及返回界面的 MCP 工具 `open_bioinfo_assistant`。尚未登记实际生信软件、读取分析数据或执行生信任务。
 
@@ -63,3 +63,7 @@ GitHub Actions 检查源码测试、构建及构建产物 MCP 调用；不代表
 本仓库沿用目标仓库已有的 MIT 许可证，详见 LICENSE。
 
 官方接入参考：https://developers.openai.com/plugins/build/plugins
+
+版本入口实时检测：localhost 预览通过本机接口读取其所连接桌面宿主的应用包版本；聊天内通过 MCP 工具读取。客户端未提供可选 platform 字段时会尝试当前宿主检测。无法确定则显示 Error 及原因。开发构建 0.1.1，产品显示版本 V1.0。
+
+开发者可在已启动预览、且从可检测的 Windows GPT 桌面宿主启动命令的前提下运行 `node scripts/check-live-version.mjs`，验证真实页面点击与当前应用包版本一致。它依赖 Playwright，配置方式同界面测试；不作为无桌面环境 CI 的必过项。

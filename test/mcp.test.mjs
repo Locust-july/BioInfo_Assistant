@@ -21,7 +21,7 @@ test('stdio tool returns an interactive resource and truthful empty state', asyn
  assert.equal(webVersion.structuredContent.clientVersion,'Web');
  assert.equal(webVersion.structuredContent.pluginVersion,'V1.0');
  const unknownVersion=await client.callTool({name:'get_client_version',arguments:{platform:'unknown'}});
- assert.equal(unknownVersion.structuredContent.clientVersion,'Error');
+ assert.match(unknownVersion.structuredContent.clientVersion,/^(Error|\d+\.\d+\.\d+(\.\d+)?)$/);
  } finally {await client.close();}
 });
 

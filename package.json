@@ -1,6 +1,6 @@
 {
   "name": "windows-bioinfo-assistant",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "生信小助手 V1.0 开发骨架",

@@ -10,10 +10,11 @@ try {
  const page = await browser.newPage({ viewport: { width: 1100, height: 800 } });
  const errors = [];
  page.on('pageerror', error => errors.push(error.message));
+ await page.route('**/api/client-version',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({clientVersion:'26.1013.4894.0',pluginVersion:'V1.0'})}));
  await page.goto(process.env.PREVIEW_URL || 'http://127.0.0.1:8787');
  await page.getByText('清单已刷新', { exact: true }).waitFor();
  await page.getByRole('button',{name:'版本',exact:true}).click();
- await page.getByText('当前 GPT 客户端版本：Error',{exact:true}).waitFor();
+ await page.getByText('当前 GPT 客户端版本：26.1013.4894.0',{exact:true}).waitFor();
  await page.screenshot({ path: 'runtime/preview-desktop.png', fullPage: true });
  await page.getByRole('button', { name: '任务记录', exact: true }).click();
  await page.getByText('还没有分析任务', { exact: true }).waitFor();
@@ -35,7 +36,7 @@ try {
     if(event.source !== frame.contentWindow) return;
     const m = event.data;
     const reply = result => event.source.postMessage({jsonrpc:'2.0',id:m.id,result}, '*');
-    if(m.method === 'ui/initialize') reply({protocolVersion:'2026-01-26',hostInfo:{name:'test-host',version:'1.0.0'},hostCapabilities:{},hostContext:{platform:'desktop'}});
+    if(m.method === 'ui/initialize') reply({protocolVersion:'2026-01-26',hostInfo:{name:'test-host',version:'1.0.0'},hostCapabilities:{},hostContext:{}});
     if(m.method === 'ui/notifications/initialized') event.source.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{software:[{name:'Bridge test fixture',version:'test-only',citation:'Testing only',operations:[]}]}}}, '*');
     if(m.method === 'tools/call' && m.params.name==='get_client_version'){window.versionCalls++;reply({structuredContent:{clientVersion:m.params.arguments.platform==='web'?'Web':window.currentVersion,pluginVersion:'V1.0'}});return;}
     if(m.method === 'tools/call') { window.calls++; reply(window.failRefresh ? {isError:true,content:[{type:'text',text:'Test refresh failure'}]} : {structuredContent:{software:[]}}); }

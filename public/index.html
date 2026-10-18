@@ -8,8 +8,8 @@
 <nav class="tabs" aria-label="工作台"><button class="tab active" data-tab="software" aria-pressed="true">软件清单</button><button class="tab" data-tab="tasks" aria-pressed="false">任务记录</button><button class="tab" data-tab="about" aria-pressed="false">关于插件</button></nav>
 <div id="software"><div class="toolbar"><input id="search" aria-label="搜索软件" placeholder="搜索软件名称…"><button class="action" id="refresh">刷新清单</button><button class="action" id="copy" disabled>复制软件与版本</button></div><div id="cards"></div><p class="notice">仅展示已登记信息；软件检测与自动操作将在适配完成后开放。</p></div>
 <section id="tasks" hidden><div class="empty"><div class="symbol">◷</div><h3>还没有分析任务</h3><p>完成首个软件适配后，运行状态、日志和结果入口会出现在这里。</p></div></section>
-<section id="about" hidden><div class="card"><h3>生信小助手 V1.0</h3><p>当前为 0.1.0 界面开发版。支持查看清单、搜索与详情交互；尚未接入实际软件分析。</p><details><summary>目录与数据</summary><p>插件由客户端管理安装；运行数据独立保存，并支持指定目录。当前页面不读取本机文件。</p></details></div></section>
-<div id="toast" role="status" aria-live="polite"></div><footer class="foot"><span>WINDOWS · 本机生信工作台</span><span id="updated">尚未刷新 · 开发版 0.1.0</span></footer></main>
+<section id="about" hidden><div class="card"><h3>生信小助手 V1.0</h3><p>当前为 0.1.1 界面开发版。支持查看清单、搜索与详情交互；尚未接入实际软件分析。</p><details><summary>目录与数据</summary><p>插件由客户端管理安装；运行数据独立保存，并支持指定目录。当前页面不读取本机文件。</p></details></div></section>
+<div id="toast" role="status" aria-live="polite"></div><footer class="foot"><span>WINDOWS · 本机生信工作台</span><span id="updated">尚未刷新 · 开发版 0.1.1</span></footer></main>
 <script>
 let software=[];let bridge=null;let hostContext={};const pending=new Map();let nextId=0;const $=id=>document.getElementById(id);const tell=message=>{$('toast').textContent=message};
 function element(tag,text,className){const node=document.createElement(tag);if(text)node.textContent=text;if(className)node.className=className;return node}
@@ -43,25 +43,28 @@ async function updateClientVersion(panel){
  const value=panel.querySelector('.client-version');
  const requestId=(panel.versionRequest||0)+1;panel.versionRequest=requestId;
  value.textContent='当前 GPT 客户端版本：获取中…';
- let version='Error';
+ let version='Error';let reason='';
  try{
+  let result;
   if(bridge){await bridge;const platform=hostContext.platform||'unknown';
    const response=await rpc('tools/call',{name:'get_client_version',arguments:{platform}});
    if(response.isError)throw new Error('版本获取失败');
-   const result=response.structuredContent?.clientVersion;
-   if(result==='Web'||result==='Error'||/^\d+\.\d+\.\d+(\.\d+)?$/.test(result||''))version=result;
-  }
- }catch{version='Error'}
+   result=response.structuredContent;
+  }else{const response=await fetch('/api/client-version',{cache:'no-store'});if(!response.ok)throw new Error('本地版本查询服务不可用');result=await response.json()}
+  const value=result?.clientVersion;
+  if(value==='Web'||value==='Error'||/^\d+\.\d+\.\d+(\.\d+)?$/.test(value||''))version=value;
+  const reasons={desktop_host_not_found:'未找到当前连接对应的桌面客户端',desktop_probe_failed:'本机版本读取失败',unsupported_platform:'当前平台暂不支持版本读取'};reason=reasons[result?.reason]||'';
+ }catch(error){version='Error';reason=error.message||'查询失败'}
  if(panel.versionRequest!==requestId)return;
  value.textContent='当前 GPT 客户端版本：'+version;
- let checked=panel.querySelector('.version-checked');if(!checked){checked=element('p',null,'notice version-checked');panel.append(checked)}checked.textContent='本次获取：'+new Date().toLocaleTimeString('zh-CN');
+ let checked=panel.querySelector('.version-checked');if(!checked){checked=element('p',null,'notice version-checked');panel.append(checked)}checked.textContent='本次获取：'+new Date().toLocaleTimeString('zh-CN')+(version==='Error'&&reason?' · '+reason:'');
 }
-function render(data){software=data?.software||[];$('count').textContent=software.length;$('copy').disabled=!software.length;$('updated').textContent='更新于 '+new Date().toLocaleTimeString('zh-CN')+' · 开发版 0.1.0';const list=software.filter(s=>s.name.toLowerCase().includes($('search').value.trim().toLowerCase()));$('cards').replaceChildren();if(!list.length){const empty=element('div',null,'empty');empty.append(element('h3',software.length?'没有匹配的软件':'尚未登记软件'),element('p',software.length?'换个关键词试试。':'添加软件后，可查看其引用、版本、官方地址和操作。'));$('cards').append(empty);if(!software.length){$('cards').append(element('p','卡片结构预览 · 以下为占位内容，不代表已安装软件','preview-label'),softwareCard({name:'软件名称',description:'软件简介保留在这里，用于简要说明用途和适用场景。',status:'状态待确认'}))}return}for(const s of list)$('cards').append(softwareCard(s))}
+function render(data){software=data?.software||[];$('count').textContent=software.length;$('copy').disabled=!software.length;$('updated').textContent='更新于 '+new Date().toLocaleTimeString('zh-CN')+' · 开发版 0.1.1';const list=software.filter(s=>s.name.toLowerCase().includes($('search').value.trim().toLowerCase()));$('cards').replaceChildren();if(!list.length){const empty=element('div',null,'empty');empty.append(element('h3',software.length?'没有匹配的软件':'尚未登记软件'),element('p',software.length?'换个关键词试试。':'添加软件后，可查看其引用、版本、官方地址和操作。'));$('cards').append(empty);if(!software.length){$('cards').append(element('p','卡片结构预览 · 以下为占位内容，不代表已安装软件','preview-label'),softwareCard({name:'软件名称',description:'软件简介保留在这里，用于简要说明用途和适用场景。',status:'状态待确认'}))}return}for(const s of list)$('cards').append(softwareCard(s))}
 for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>{for(const n of document.querySelectorAll('[data-tab]')){const active=n===b;n.classList.toggle('active',active);n.setAttribute('aria-pressed',String(active));$(n.dataset.tab).hidden=!active}tell('')};$('search').oninput=()=>render({software});
 function rpc(method,params){return new Promise((resolve,reject)=>{const id=++nextId;const timer=setTimeout(()=>{pending.delete(id);reject(new Error('客户端响应超时'))},10000);pending.set(id,{resolve,reject,timer});parent.postMessage({jsonrpc:'2.0',id,method,params},'*')})}
 window.addEventListener('message',event=>{if(event.source!==parent||!event.data||event.data.jsonrpc!=='2.0')return;const m=event.data;if(pending.has(m.id)){const p=pending.get(m.id);clearTimeout(p.timer);pending.delete(m.id);m.error?p.reject(new Error(m.error.message)):p.resolve(m.result)}else if(m.method==='ui/notifications/host-context-changed')hostContext={...hostContext,...m.params};else if(m.method==='ui/notifications/tool-result'&&m.params?.structuredContent?.software)render(m.params.structuredContent)});
 async function refresh(){const b=$('refresh');b.disabled=true;try{let data;if(bridge){await bridge;const result=await rpc('tools/call',{name:'open_bioinfo_assistant',arguments:{}});if(result.isError)throw new Error(result.content?.[0]?.text||'刷新失败');data=result.structuredContent}else{const res=await fetch('/api/workspace');if(!res.ok)throw new Error('无法读取清单');data=await res.json()}render(data);tell('清单已刷新')}catch(e){tell('刷新失败：'+e.message)}finally{b.disabled=false}}
 $('refresh').onclick=refresh;$('copy').onclick=async()=>{try{await navigator.clipboard.writeText(software.map(s=>s.name+' '+(s.version||'版本待确认')).join('\n'));tell('已复制软件与版本')}catch{tell('客户端未允许复制，请从详情中选择文本复制。')}};
-render({software:[]});if(parent!==window){$('connection').textContent='正在连接客户端';bridge=rpc('ui/initialize',{appInfo:{name:'bioinfo-assistant-ui',version:'0.1.0'},appCapabilities:{},protocolVersion:'2026-01-26'}).then(result=>{hostContext=result.hostContext||{};parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*');$('connection').textContent='已连接客户端'});bridge.catch(e=>{$('connection').textContent='连接未完成';tell(e.message)})}else refresh();
+render({software:[]});if(parent!==window){$('connection').textContent='正在连接客户端';bridge=rpc('ui/initialize',{appInfo:{name:'bioinfo-assistant-ui',version:'0.1.1'},appCapabilities:{},protocolVersion:'2026-01-26'}).then(result=>{hostContext=result.hostContext||{};parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*');$('connection').textContent='已连接客户端'});bridge.catch(e=>{$('connection').textContent='连接未完成';tell(e.message)})}else refresh();
 </script></body></html>
 

@@ -37,10 +37,13 @@ for ($depth = 0; $depth -lt 32; $depth++) {
 export async function getClientVersion(platform = 'unknown', probe = probeDesktopVersion) {
   const result = { clientVersion: 'Error', pluginVersion: PLUGIN_VERSION, checkedAt: new Date().toISOString() };
   if (platform === 'web') return { ...result, clientVersion: 'Web' };
-  if (platform !== 'desktop') return result;
+  // Some desktop hosts omit the optional MCP Apps platform field. In that
+  // case use the live server ancestry as evidence, never another running app.
+  if (!['desktop', 'unknown'].includes(platform)) return { ...result, reason: 'unsupported_platform' };
   try {
     const current = await probe();
     if (current && /^\d+\.\d+\.\d+(\.\d+)?$/.test(current.version)) result.clientVersion = current.version;
-  } catch { /* Failure is deliberately represented by Error, never stale data. */ }
+    else result.reason = 'desktop_host_not_found';
+  } catch { result.reason = 'desktop_probe_failed'; }
   return result;
 }

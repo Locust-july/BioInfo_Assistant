@@ -4,9 +4,9 @@ import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from '@model
 import { z } from 'zod';
 import { getClientVersion } from './client-version.mjs';
 export const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
-export const workspace = () => ({ product: '生信小助手', version: '0.1.0', software: [], tasks: [], analysisAvailable: false });
+export const workspace = () => ({ product: '生信小助手', version: '0.1.1', software: [], tasks: [], analysisAvailable: false });
 export function createMcpServer() {
-  const server = new McpServer({ name: 'bioinfo-assistant', version: '0.1.0' });
+  const server = new McpServer({ name: 'bioinfo-assistant', version: '0.1.1' });
   const uri = 'ui://bioinfo-assistant/workspace.html';
   server.registerTool('get_client_version', {
     title: '获取当前 GPT 客户端版本',

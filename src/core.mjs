@@ -17,7 +17,7 @@ export function diagnostics(env = process.env) {
   return {
     product: '生信小助手',
     targetVersion: '1.0',
-    developmentVersion: '0.1.0',
+    developmentVersion: '0.1.1',
     platform: process.platform,
     nodeVersion: process.version,
     paths: resolvePaths(env),

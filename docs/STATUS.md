@@ -56,3 +56,15 @@
 - 未识别宿主、客户端未运行、权限不足、非打包桌面安装或检测失败显示 Error。独立 localhost 预览也为 Error，不冒充 ChatGPT 网页端。
 - 不使用可执行文件的 FileVersion/ProductVersion：实测它们可能是 Chromium 引擎版本。
 - 本机读取结果：26.1013.4894.0；已验证连续点击重新查询、旧结果失效、Web 和 Error 分支。更新后仍需在真实客户端验证宿主 platform 字段是否提供；缺失时按要求返回 Error。
+
+## 版本 Error 修复 2026-10-18
+
+修复构建 0.1.1，用户可见插件版本仍为 V1.0。
+
+已复现：后台读取为 26.1013.4894.0，而 localhost 页面点击版本直接显示 Error。原因是原页面在没有 iframe 桥接时根本未调用后台。此外 MCP Apps 的 platform 为可选字段，原代码将缺失字段当成失败而未尝试当前宿主检测。
+
+修复：本地预览每次点击请求 /api/client-version（禁止缓存）；聊天宿主缺失 platform 时仍沿当前服务的活跃进程祖先链检测桌面应用包。明确 web 时保持返回 Web；未找到当前宿主或读取失败仍为 Error，并展示失败原因。不会通过扫描其他正在运行的客户端填充版本。
+
+验证：scripts/check-live-version.mjs 在本机从红到绿，真实页面点击与活跃客户端版本一致；模拟宿主省略 platform、连续查询、Web、Error、刷新检查通过。真实聊天修复后的结果仍需用户重开插件确认。
+
+上文“独立 localhost 预览也为 Error”和“platform 缺失直接 Error”为旧行为，以本修复记录为准。
