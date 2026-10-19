@@ -1,0 +1,30 @@
+name: Auto Merge PR
+
+# 目的：协作者开 PR 后，只要检查通过就自动合并，仓库主无需手动点 Merge
+# 放置位置：仓库根目录 .github/workflows/auto-merge.yml
+# 前置条件：仓库 Settings -> General -> Pull Requests 里勾选 "Allow auto-merge"
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    # 只对指定协作者的非草稿 PR 生效；打了 do-not-merge 标签的会被跳过
+    if: >
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.user.login == 'Nexmach' &&
+      !contains(github.event.pull_request.labels.*.name, 'do-not-merge')
+    runs-on: ubuntu-latest
+    steps:
+      - name: 开启自动合并（squash 后合并并删除源分支）
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --auto --delete-branch
