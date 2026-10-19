@@ -17,11 +17,11 @@ export function diagnostics(env = process.env) {
   return {
     product: '生信小助手',
     targetVersion: '1.0',
-    developmentVersion: '0.1.1',
+    developmentVersion: '0.1.0',
     platform: process.platform,
     nodeVersion: process.version,
     paths: resolvePaths(env),
-    targetClient: { name: 'ChatGPT', version: '26.1013.4894.0', mode: 'Work', source: 'user-reported' },
+    targetHost: { name: 'Codex', integration: 'local-plugin', source: 'user-specified' },
     connection: { status: 'unverified', reason: '尚无本项目 MCP 配置及真实工具调用记录' },
     adapters: [],
     analysisAvailable: false,

@@ -1,0 +1,268 @@
+[
+  {
+    "softwareIds": [
+      "rdp4"
+    ],
+    "title": "RDP4: Detection and analysis of recombination patterns in virus genomes",
+    "reference": "Martin DP, Murrell B, Golden M, Khoosal A, Muhire B. RDP4: Detection and analysis of recombination patterns in virus genomes. Virus Evolution. 2015;1(1):vev003. doi:10.1093/ve/vev003.",
+    "doi": "10.1093/ve/vev003",
+    "source": "https://doi.org/10.1093/ve/vev003",
+    "metadataSource": "https://api.crossref.org/works/10.1093/ve/vev003",
+    "recommendationSource": null,
+    "checkedAt": "2026-10-18",
+    "verification": "论文书目已核验，官方推荐关系待确认",
+    "scope": "RDP4 软件论文；不能替代 RDP5 或具体方法论文。",
+    "versionPrefixes": [
+      "4."
+    ],
+    "bibtex": "@article{Martin2015rdp4,\n  title = {{RDP4: Detection and analysis of recombination patterns in virus genomes}},\n  author = {Martin, Darren P. and Murrell, Ben and Golden, Michael and Khoosal, Arjun and Muhire, Brejnev},\n  journal = {Virus Evolution},\n  year = {2015},\n  volume = {1},\n  number = {1},\n  pages = {vev003},\n  doi = {10.1093/ve/vev003}\n}",
+    "verificationStatus": "bibliography_verified_recommendation_pending"
+  },
+  {
+    "softwareIds": [
+      "aliview"
+    ],
+    "title": "AliView: a fast and lightweight alignment viewer and editor for large datasets",
+    "reference": "Larsson A. AliView: a fast and lightweight alignment viewer and editor for large datasets. Bioinformatics. 2014;30(22):3276-3278. doi:10.1093/bioinformatics/btu531.",
+    "doi": "10.1093/bioinformatics/btu531",
+    "source": "https://doi.org/10.1093/bioinformatics/btu531",
+    "metadataSource": "https://api.crossref.org/works/10.1093/bioinformatics/btu531",
+    "recommendationSource": "https://www.ormbunkar.se/aliview/index.html",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "AliView 软件论文；文件启动器版本不用于判断论文适用性。",
+    "versionPrefixes": null,
+    "bibtex": "@article{Larsson2014aliview,\n  title = {{AliView: a fast and lightweight alignment viewer and editor for large datasets}},\n  author = {Larsson, Anders},\n  journal = {Bioinformatics},\n  year = {2014},\n  volume = {30},\n  number = {22},\n  pages = {3276--3278},\n  doi = {10.1093/bioinformatics/btu531}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "beast",
+      "beauti"
+    ],
+    "title": "Bayesian Phylogenetics with BEAUti and the BEAST 1.7",
+    "reference": "Drummond AJ, Suchard MA, Xie D, Rambaut A. Bayesian Phylogenetics with BEAUti and the BEAST 1.7. Molecular Biology and Evolution. 2012;29(8):1969-1973. doi:10.1093/molbev/mss075.",
+    "doi": "10.1093/molbev/mss075",
+    "source": "https://doi.org/10.1093/molbev/mss075",
+    "metadataSource": "https://api.crossref.org/works/10.1093/molbev/mss075",
+    "recommendationSource": "https://beast.community/first_tutorial",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "BEAST 1.7/1.8 与 BEAUti 框架论文；不适用于 BEAST 2。模型/方法需另行引用。",
+    "versionPrefixes": [
+      "1.7",
+      "1.8"
+    ],
+    "bibtex": "@article{Drummond2012beast,\n  title = {{Bayesian Phylogenetics with BEAUti and the BEAST 1.7}},\n  author = {Drummond, Alexei J. and Suchard, Marc A. and Xie, Dong and Rambaut, Andrew},\n  journal = {Molecular Biology and Evolution},\n  year = {2012},\n  volume = {29},\n  number = {8},\n  pages = {1969--1973},\n  doi = {10.1093/molbev/mss075}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "treeannotator",
+      "logcombiner"
+    ],
+    "title": "Bayesian Phylogenetics with BEAUti and the BEAST 1.7",
+    "reference": "Drummond AJ, Suchard MA, Xie D, Rambaut A. Bayesian Phylogenetics with BEAUti and the BEAST 1.7. Molecular Biology and Evolution. 2012;29(8):1969-1973. doi:10.1093/molbev/mss075.",
+    "doi": "10.1093/molbev/mss075",
+    "source": "https://doi.org/10.1093/molbev/mss075",
+    "metadataSource": "https://api.crossref.org/works/10.1093/molbev/mss075",
+    "recommendationSource": null,
+    "checkedAt": "2026-10-18",
+    "verification": "论文书目已核验，官方推荐关系待确认",
+    "scope": "BEAST 1 套件框架论文候选；未核验为本辅助程序的独立官方推荐引用。",
+    "versionPrefixes": [
+      "1.7",
+      "1.8"
+    ],
+    "bibtex": "@article{Drummond2012treeannotator,\n  title = {{Bayesian Phylogenetics with BEAUti and the BEAST 1.7}},\n  author = {Drummond, Alexei J. and Suchard, Marc A. and Xie, Dong and Rambaut, Andrew},\n  journal = {Molecular Biology and Evolution},\n  year = {2012},\n  volume = {29},\n  number = {8},\n  pages = {1969--1973},\n  doi = {10.1093/molbev/mss075}\n}",
+    "verificationStatus": "bibliography_verified_recommendation_pending"
+  },
+  {
+    "softwareIds": [
+      "tracer"
+    ],
+    "title": "Posterior Summarization in Bayesian Phylogenetics Using Tracer 1.7",
+    "reference": "Rambaut A, Drummond AJ, Xie D, Baele G, Suchard MA. Posterior Summarization in Bayesian Phylogenetics Using Tracer 1.7. Systematic Biology. 2018;67(5):901-904. doi:10.1093/sysbio/syy032.",
+    "doi": "10.1093/sysbio/syy032",
+    "source": "https://doi.org/10.1093/sysbio/syy032",
+    "metadataSource": "https://api.crossref.org/works/10.1093/sysbio/syy032",
+    "recommendationSource": "https://beast.community/tracer.html",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "Tracer 1.7 系列；不用于 TreeTracer。",
+    "versionPrefixes": [
+      "1.7"
+    ],
+    "bibtex": "@article{Rambaut2018tracer,\n  title = {{Posterior Summarization in Bayesian Phylogenetics Using Tracer 1.7}},\n  author = {Rambaut, Andrew and Drummond, Alexei J and Xie, Dong and Baele, Guy and Suchard, Marc A},\n  journal = {Systematic Biology},\n  year = {2018},\n  volume = {67},\n  number = {5},\n  pages = {901--904},\n  doi = {10.1093/sysbio/syy032}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "mafft"
+    ],
+    "title": "MAFFT Multiple Sequence Alignment Software Version 7: Improvements in Performance and Usability",
+    "reference": "Katoh K, Standley DM. MAFFT Multiple Sequence Alignment Software Version 7: Improvements in Performance and Usability. Molecular Biology and Evolution. 2013;30(4):772-780. doi:10.1093/molbev/mst010.",
+    "doi": "10.1093/molbev/mst010",
+    "source": "https://doi.org/10.1093/molbev/mst010",
+    "metadataSource": "https://api.crossref.org/works/10.1093/molbev/mst010",
+    "recommendationSource": "https://mafft.ddbj.nig.ac.jp/alignment/software/",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "MAFFT 7 概述论文；特殊算法/选项可能需追加方法论文。",
+    "versionPrefixes": [
+      "7."
+    ],
+    "bibtex": "@article{Katoh2013mafft,\n  title = {{MAFFT Multiple Sequence Alignment Software Version 7: Improvements in Performance and Usability}},\n  author = {Katoh, K. and Standley, D. M.},\n  journal = {Molecular Biology and Evolution},\n  year = {2013},\n  volume = {30},\n  number = {4},\n  pages = {772--780},\n  doi = {10.1093/molbev/mst010}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "muscle"
+    ],
+    "title": "MUSCLE: multiple sequence alignment with high accuracy and high throughput",
+    "reference": "Edgar RC. MUSCLE: multiple sequence alignment with high accuracy and high throughput. Nucleic Acids Research. 2004;32(5):1792-1797. doi:10.1093/nar/gkh340.",
+    "doi": "10.1093/nar/gkh340",
+    "source": "https://doi.org/10.1093/nar/gkh340",
+    "metadataSource": "https://api.crossref.org/works/10.1093/nar/gkh340",
+    "recommendationSource": null,
+    "checkedAt": "2026-10-18",
+    "verification": "论文书目已核验，官方推荐关系待确认",
+    "scope": "MUSCLE 早期/3.x 软件论文候选；不能替代 MUSCLE 5 论文。官方推荐关系待复核。",
+    "versionPrefixes": [
+      "3."
+    ],
+    "bibtex": "@article{Edgar2004muscle,\n  title = {{MUSCLE: multiple sequence alignment with high accuracy and high throughput}},\n  author = {Edgar, R. C.},\n  journal = {Nucleic Acids Research},\n  year = {2004},\n  volume = {32},\n  number = {5},\n  pages = {1792--1797},\n  doi = {10.1093/nar/gkh340}\n}",
+    "verificationStatus": "bibliography_verified_recommendation_pending"
+  },
+  {
+    "softwareIds": [
+      "fasttree"
+    ],
+    "title": "FastTree 2 – Approximately Maximum-Likelihood Trees for Large Alignments",
+    "reference": "Price MN, Dehal PS, Arkin AP. FastTree 2 – Approximately Maximum-Likelihood Trees for Large Alignments. PLoS ONE. 2010;5(3):e9490. doi:10.1371/journal.pone.0009490.",
+    "doi": "10.1371/journal.pone.0009490",
+    "source": "https://doi.org/10.1371/journal.pone.0009490",
+    "metadataSource": "https://api.crossref.org/works/10.1371/journal.pone.0009490",
+    "recommendationSource": "https://morgannprice.github.io/fasttree/",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "FastTree 2 系列；不用于旧版 FastTree 1。",
+    "versionPrefixes": [
+      "2."
+    ],
+    "bibtex": "@article{Price2010fasttree,\n  title = {{FastTree 2 – Approximately Maximum-Likelihood Trees for Large Alignments}},\n  author = {Price, Morgan N. and Dehal, Paramvir S. and Arkin, Adam P.},\n  journal = {PLoS ONE},\n  year = {2010},\n  volume = {5},\n  number = {3},\n  pages = {e9490},\n  doi = {10.1371/journal.pone.0009490}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "phyml"
+    ],
+    "title": "New Algorithms and Methods to Estimate Maximum-Likelihood Phylogenies: Assessing the Performance of PhyML 3.0",
+    "reference": "Guindon S, Dufayard JF, Lefort V, Anisimova M, Hordijk W, Gascuel O. New Algorithms and Methods to Estimate Maximum-Likelihood Phylogenies: Assessing the Performance of PhyML 3.0. Systematic Biology. 2010;59(3):307-321. doi:10.1093/sysbio/syq010.",
+    "doi": "10.1093/sysbio/syq010",
+    "source": "https://doi.org/10.1093/sysbio/syq010",
+    "metadataSource": "https://api.crossref.org/works/10.1093/sysbio/syq010",
+    "recommendationSource": "https://github.com/stephaneguindon/phyml",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "PhyML 3.0 软件论文；PhyTime/PhyREX 和其他方法另需引用。",
+    "versionPrefixes": [
+      "3."
+    ],
+    "bibtex": "@article{Guindon2010phyml,\n  title = {{New Algorithms and Methods to Estimate Maximum-Likelihood Phylogenies: Assessing the Performance of PhyML 3.0}},\n  author = {Guindon, Stéphane and Dufayard, Jean-François and Lefort, Vincent and Anisimova, Maria and Hordijk, Wim and Gascuel, Olivier},\n  journal = {Systematic Biology},\n  year = {2010},\n  volume = {59},\n  number = {3},\n  pages = {307--321},\n  doi = {10.1093/sysbio/syq010}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "mrbayes"
+    ],
+    "title": "MrBayes 3.2: Efficient Bayesian Phylogenetic Inference and Model Choice Across a Large Model Space",
+    "reference": "Ronquist F, Teslenko M, van der Mark P, Ayres DL, Darling A, Höhna S, Larget B, Liu L, Suchard MA, Huelsenbeck JP. MrBayes 3.2: Efficient Bayesian Phylogenetic Inference and Model Choice Across a Large Model Space. Systematic Biology. 2012;61(3):539-542. doi:10.1093/sysbio/sys029.",
+    "doi": "10.1093/sysbio/sys029",
+    "source": "https://doi.org/10.1093/sysbio/sys029",
+    "metadataSource": "https://api.crossref.org/works/10.1093/sysbio/sys029",
+    "recommendationSource": "https://nbisweden.github.io/MrBayes/manual.html",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "MrBayes 3.2 系列；并行、BEAGLE 与具体模型可能需追加引用。",
+    "versionPrefixes": [
+      "3.2"
+    ],
+    "bibtex": "@article{Ronquist2012mrbayes,\n  title = {{MrBayes 3.2: Efficient Bayesian Phylogenetic Inference and Model Choice Across a Large Model Space}},\n  author = {Ronquist, Fredrik and Teslenko, Maxim and van der Mark, Paul and Ayres, Daniel L. and Darling, Aaron and Höhna, Sebastian and Larget, Bret and Liu, Liang and Suchard, Marc A. and Huelsenbeck, John P.},\n  journal = {Systematic Biology},\n  year = {2012},\n  volume = {61},\n  number = {3},\n  pages = {539--542},\n  doi = {10.1093/sysbio/sys029}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "raxml"
+    ],
+    "title": "RAxML version 8: a tool for phylogenetic analysis and post-analysis of large phylogenies",
+    "reference": "Stamatakis A. RAxML version 8: a tool for phylogenetic analysis and post-analysis of large phylogenies. Bioinformatics. 2014;30(9):1312-1313. doi:10.1093/bioinformatics/btu033.",
+    "doi": "10.1093/bioinformatics/btu033",
+    "source": "https://doi.org/10.1093/bioinformatics/btu033",
+    "metadataSource": "https://api.crossref.org/works/10.1093/bioinformatics/btu033",
+    "recommendationSource": "https://cme.h-its.org/exelixis/web/software/raxml/index.html",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "RAxML 8；不用于 RAxML-NG 或未确认的旧版本。",
+    "versionPrefixes": [
+      "8."
+    ],
+    "bibtex": "@article{Stamatakis2014raxml,\n  title = {{RAxML version 8: a tool for phylogenetic analysis and post-analysis of large phylogenies}},\n  author = {Stamatakis, Alexandros},\n  journal = {Bioinformatics},\n  year = {2014},\n  volume = {30},\n  number = {9},\n  pages = {1312--1313},\n  doi = {10.1093/bioinformatics/btu033}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "simplot"
+    ],
+    "title": "SimPlot++: a Python application for representing sequence similarity and detecting recombination",
+    "reference": "Samson S, Lord É, Makarenkov V. SimPlot++: a Python application for representing sequence similarity and detecting recombination. Bioinformatics. 2022;38(11):3118-3120. doi:10.1093/bioinformatics/btac287.",
+    "doi": "10.1093/bioinformatics/btac287",
+    "source": "https://doi.org/10.1093/bioinformatics/btac287",
+    "metadataSource": "https://api.crossref.org/works/10.1093/bioinformatics/btac287",
+    "recommendationSource": null,
+    "checkedAt": "2026-10-18",
+    "verification": "论文书目已核验，官方推荐关系待确认",
+    "scope": "SimPlot++ 正式发表软件论文；不是原始 SimPlot 论文。官方推荐关系待复核。",
+    "versionPrefixes": null,
+    "bibtex": "@article{Samson2022simplot,\n  title = {{SimPlot++: a Python application for representing sequence similarity and detecting recombination}},\n  author = {Samson, Stéphane and Lord, Étienne and Makarenkov, Vladimir},\n  journal = {Bioinformatics},\n  year = {2022},\n  volume = {38},\n  number = {11},\n  pages = {3118--3120},\n  doi = {10.1093/bioinformatics/btac287}\n}",
+    "verificationStatus": "bibliography_verified_recommendation_pending"
+  },
+  {
+    "softwareIds": [
+      "sdt"
+    ],
+    "title": "SDT: A Virus Classification Tool Based on Pairwise Sequence Alignment and Identity Calculation",
+    "reference": "Muhire BM, Varsani A, Martin DP. SDT: A Virus Classification Tool Based on Pairwise Sequence Alignment and Identity Calculation. PLoS ONE. 2014;9(9):e108277. doi:10.1371/journal.pone.0108277.",
+    "doi": "10.1371/journal.pone.0108277",
+    "source": "https://doi.org/10.1371/journal.pone.0108277",
+    "metadataSource": "https://api.crossref.org/works/10.1371/journal.pone.0108277",
+    "recommendationSource": "https://web.cbio.uct.ac.za/~brejnev/",
+    "checkedAt": "2026-10-18",
+    "verification": "官方推荐关系与论文书目已核验",
+    "scope": "SDT 软件论文；分类阈值与具体病毒分类规范需另行核验。",
+    "versionPrefixes": [
+      "1."
+    ],
+    "bibtex": "@article{Muhire2014sdt,\n  title = {{SDT: A Virus Classification Tool Based on Pairwise Sequence Alignment and Identity Calculation}},\n  author = {Muhire, Brejnev Muhizi and Varsani, Arvind and Martin, Darren Patrick},\n  journal = {PLoS ONE},\n  year = {2014},\n  volume = {9},\n  number = {9},\n  pages = {e108277},\n  doi = {10.1371/journal.pone.0108277}\n}",
+    "verificationStatus": "official_recommendation_verified"
+  },
+  {
+    "softwareIds": [
+      "clustalw"
+    ],
+    "title": "Clustal W and Clustal X version 2.0",
+    "reference": "Larkin MA, Blackshields G, Brown NP, Chenna R, McGettigan PA, McWilliam H, Valentin F, Wallace IM, Wilm A, Lopez R, Thompson JD, Gibson TJ, Higgins DG. Clustal W and Clustal X version 2.0. Bioinformatics. 2007;23(21):2947-2948. doi:10.1093/bioinformatics/btm404.",
+    "doi": "10.1093/bioinformatics/btm404",
+    "source": "https://doi.org/10.1093/bioinformatics/btm404",
+    "metadataSource": "https://api.crossref.org/works/10.1093/bioinformatics/btm404",
+    "recommendationSource": null,
+    "checkedAt": "2026-10-18",
+    "verification": "论文书目已核验，官方推荐关系待确认",
+    "scope": "Clustal W/X 2.0 软件论文；不用于 ClustalW 1 或 Clustal Omega。官方推荐关系待复核。",
+    "versionPrefixes": [
+      "2."
+    ],
+    "bibtex": "@article{Larkin2007clustalw,\n  title = {{Clustal W and Clustal X version 2.0}},\n  author = {Larkin, M.A. and Blackshields, G. and Brown, N.P. and Chenna, R. and McGettigan, P.A. and McWilliam, H. and Valentin, F. and Wallace, I.M. and Wilm, A. and Lopez, R. and Thompson, J.D. and Gibson, T.J. and Higgins, D.G.},\n  journal = {Bioinformatics},\n  year = {2007},\n  volume = {23},\n  number = {21},\n  pages = {2947--2948},\n  doi = {10.1093/bioinformatics/btm404}\n}",
+    "verificationStatus": "bibliography_verified_recommendation_pending"
+  }
+]
