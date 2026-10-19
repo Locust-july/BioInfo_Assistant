@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-19",
+  "sourceHead": "2a9bedf",
+  "remoteLastConfirmed": "bd0c7b9",
+  "remoteCheck": "github:443 unavailable",
+  "files": [
+    {
+      "path": "src/app-version.mjs",
+      "sha256": "e5766d28daf9886cf65e883393c346755512c12ca12b64f6447cda2091dab094"
+    },
+    {
+      "path": "src/catalog.mjs",
+      "sha256": "34958193ab10abdc3b30909226a27de4170c483d1efeb6c62b3c86cebb31b009"
+    },
+    {
+      "path": "src/citations-data.json",
+      "sha256": "f0d564ba6e58d0dbe433369347e8e50a72bec95f8b4f0e232fe34c4da5cedfb8"
+    },
+    {
+      "path": "src/citations.mjs",
+      "sha256": "9dfa618f33725bc10f4ea82f8d0aba7b8bee6a31d0d06fad9d074e22d319df0d"
+    },
+    {
+      "path": "src/cli.mjs",
+      "sha256": "8c3b473e03acb01d87edc61fb67cbd0ec2d6e1ed39341db55a71c21282836692"
+    },
+    {
+      "path": "src/core.mjs",
+      "sha256": "0027ccbaf0f12a667955f418b598d88120b7f5f609f84f043752d1ad7e47ae9e"
+    },
+    {
+      "path": "src/discover.mjs",
+      "sha256": "b43336c8dcc3d6977d5419ddcf3b4747c0f56fc83d261981a42089aa87b610f5"
+    },
+    {
+      "path": "src/inspect.mjs",
+      "sha256": "5fdb52b88dbad80f271fb25a72184567e2f7b7ca6955f0e6f652b7323e033dc9"
+    },
+    {
+      "path": "src/json-store.mjs",
+      "sha256": "f22e1953b736a390c2be1e9e577b1a47e00867f43a6e6996a3a76d6c9315d2e8"
+    },
+    {
+      "path": "src/locate.mjs",
+      "sha256": "4edf21c6518e8277fa797df2a604ed4322b0d577cbde7f02ce947c8f08e4de12"
+    },
+    {
+      "path": "src/locations.mjs",
+      "sha256": "8c825afc9465c2ae43aabd34bfbc69c067d169db1a865c15f681fc37284dbcbe"
+    },
+    {
+      "path": "src/materials.mjs",
+      "sha256": "8cc2e1a00f5fcdd823ca1fe617431ae9c5900035bec7b2fd5b1feb5346befdbe"
+    },
+    {
+      "path": "src/mcp.mjs",
+      "sha256": "0c1ad192c10b0925270c99d168a1479ec97ee39bed3e951dfd1af57e6a1089b3"
+    },
+    {
+      "path": "src/picker.mjs",
+      "sha256": "9bb533b09d8407f75b68f6ac66670a28900b49998521f78d3d9a9f32b936a6a2"
+    },
+    {
+      "path": "src/preview.mjs",
+      "sha256": "fc0d09eb82769c2a2fadec1f29c5b7d564b722bae4c7532b7ca6a6271b3da05a"
+    },
+    {
+      "path": "src/processes.mjs",
+      "sha256": "f899b3864db6855dd3f9965fbfb56d2c6e10e5a1a11480af053539f7cbb2b621"
+    },
+    {
+      "path": "src/server.mjs",
+      "sha256": "aa730e0b9de6269c066d2b9fe8e320c7a8ebcf70f52f0bd9018cf8dc6054e397"
+    },
+    {
+      "path": "src/task-software.mjs",
+      "sha256": "b654a415e23a0124d5a84135f0bbf754c8adb3d4747e8ccc65d590f1e5c4b6f9"
+    },
+    {
+      "path": "src/task-tools.mjs",
+      "sha256": "1fbd8af7dd57c8bebb56a079a29af09bf6614ab70ad369cfdf6f6a3bbc7ea602"
+    },
+    {
+      "path": "test/app-version.test.mjs",
+      "sha256": "06120c4d402b2a6d75ddf58237da5fa843f931ca6e37fbaf6596bf36d3d00a35"
+    },
+    {
+      "path": "test/catalog.test.mjs",
+      "sha256": "99f2223700c9aa4d2a836db18934fa3adaecdfd3812fb0f21c79e39483164872"
+    },
+    {
+      "path": "test/citations.test.mjs",
+      "sha256": "470549b37ec0469ff5ff627c872529be3df2e8d2204b66cad82db15fb9c6961d"
+    },
+    {
+      "path": "test/core.test.mjs",
+      "sha256": "b707a657cfce5a97e93e716d47060925ce6b3c079c57e3b292b14fcafa89f4d9"
+    },
+    {
+      "path": "test/discover.test.mjs",
+      "sha256": "21951323080eab4a74b2e99ad8da73f2a58591dc6bb03db4f67d22401ece352e"
+    },
+    {
+      "path": "test/locate.test.mjs",
+      "sha256": "b686b602ea3081a2a5d477fbfb62238a39e50826de5d2d3a8a2b72b6f9519d91"
+    },
+    {
+      "path": "test/locations.test.mjs",
+      "sha256": "1e8f8f528ff8ec6275fb26ea5a03cec0b3aec34311e4b23d4daa68209b7d496f"
+    },
+    {
+      "path": "test/materials.test.mjs",
+      "sha256": "f6129531feee95d720ba741c882d853673869e7025db4dd032869f44c9cbd989"
+    },
+    {
+      "path": "test/mcp.test.mjs",
+      "sha256": "a138b103ace72947bebcd069119304f4b21a2a77fae5472288b4ef99400409fb"
+    },
+    {
+      "path": "test/persistence.test.mjs",
+      "sha256": "2a7f3d2e1766e071dacb54eeb2a0c4dfe0e86ae915741c5f8f488f93e8382a11"
+    },
+    {
+      "path": "test/processes.test.mjs",
+      "sha256": "755d9a4fc813509b5b89e43bb5e2bc0047428656aad0131e5d66f69ca94b33d5"
+    },
+    {
+      "path": "test/task-software.test.mjs",
+      "sha256": "a5fc9855c5d3c5dac71a5ad132ec8670232e0e3f2b2d9c16282f38e853d51cc2"
+    },
+    {
+      "path": "test/task-tools.test.mjs",
+      "sha256": "c1f2fc0407bd3155f32f20892f99d06d85f81a8317284492ed4c0eeede35a2ea"
+    }
+  ],
+  "uiIntegrationBaseSha256": "aec54054b84f3be0fec21ead0d4e9bc26d19b3b4aa13623697bd42e5269131b8",
+  "designExtensions": {
+    "reason": "用户要求产出文件时间；隔离功能层最小补充，原功能目录未修改",
+    "files": [
+      {
+        "path": "src/locations.mjs",
+        "sha256": "24e10a77575d8e37dea2a840e15dd7df19dc3f96150ddf215a5ce7d01652ffd9"
+      },
+      {
+        "path": "src/mcp.mjs",
+        "sha256": "4fd6febaa68bf9b7d369f2597969968df1e4c7c40f69b4820e28222bb9ae95e3"
+      },
+      {
+        "path": "src/preview.mjs",
+        "sha256": "19bdf2c764296ad72cd5d8e7627cce2418017b1ca6625e3304d17cc6976e1274"
+      },
+      {
+        "path": "test/locations.test.mjs",
+        "sha256": "9e19a4ce039042ddace8d1143d64c2ca85dcebfc5b5d19332cba64785f59f30e"
+      },
+      {
+        "path": "test/mcp.test.mjs",
+        "sha256": "ef1128b12a6ac1e92f7f220e5e219d89689b361d120d90f10e711cea8ff0a4a7"
+      }
+    ]
+  }
+}

@@ -1,0 +1,113 @@
+diff --git a/src/locations.mjs b/src/locations.mjs
+index 609e69f..eda2896 100644
+--- a/src/locations.mjs
++++ b/src/locations.mjs
+@@ -11,12 +11,13 @@ export function normalizeLocation(value) {
+   return path.win32.normalize(target);
+ }
+ 
++function fileTimes(info){const iso=(value,date)=>{if(value===undefined||value===null)return null;const n=Number(value);if(!Number.isFinite(n)||n<=0)return null;return date instanceof Date&&Number.isFinite(date.getTime())?date.toISOString():new Date(n).toISOString()};return {fileCreatedAt:iso(info.birthtimeMs,info.birthtime),fileModifiedAt:iso(info.mtimeMs,info.mtime),fileTimestampsSource:'filesystem_stat'}}
+ export async function describeLocation(value, options = {}) {
+   const target = normalizeLocation(value);
+   const base = { path: target, parentPath: path.win32.dirname(target), checkedAt: new Date().toISOString() };
+   try {
+     const info = await (options.stat || stat)(target);
+-    return { ...base, status: info.isDirectory() ? 'directory' : info.isFile() ? 'file' : 'unsupported', exists: true,
++    return { ...base,...fileTimes(info), status: info.isDirectory() ? 'directory' : info.isFile() ? 'file' : 'unsupported', exists: true,
+       revealMode: info.isDirectory() ? 'open_directory' : info.isFile() ? 'select_file' : null };
+   } catch (e) {
+     return { ...base, status: ['ENOENT','ENOTDIR'].includes(e.code) ? 'missing' : 'unreadable', exists: false, revealMode: null, reason: e.code || e.message };
+@@ -52,11 +53,11 @@ export function createLocationRegistry({directory} = {}) {
+       const key=record.locationId || duplicate?.[0] || createHash('sha256').update([record.kind,record.softwareId || '',record.taskId || '',target.toLowerCase()].join('|')).digest('hex');
+       if(!/^[a-f0-9]{64}$/.test(key))throw Error('位置标识无效');
+       if(!records.has(key) && records.size>=500) throw Error('本机位置标注达到 500 条上限');
+-      let identity=record.fileIdentity;try{identity=fingerprint(statSync(target,{bigint:true}));}catch{}
++      let identity=record.fileIdentity,times={};try{const info=statSync(target,{bigint:true});identity=fingerprint(info);times=fileTimes(info);}catch{}
+       const trackingRoot=normalizeLocation(record.trackingRoot || path.win32.dirname(target));
+       const relative=path.win32.relative(trackingRoot,target);if(relative.startsWith('..')||path.win32.isAbsolute(relative))throw Error('标注路径必须位于追踪目录内');
+       if(path.win32.parse(trackingRoot).root===trackingRoot)throw Error('追踪目录不能是整个盘符，请选择软件/项目文件夹');
+-      const location={...record,locationId:key,path:target,trackingRoot,fileIdentity:identity,parentPath:path.win32.dirname(target),recordedAt:new Date().toISOString()};
++      const location={...record,...times,locationId:key,path:target,trackingRoot,fileIdentity:identity,parentPath:path.win32.dirname(target),recordedAt:new Date().toISOString()};
+       save(key,location);records.set(key,location); return structuredClone(location);
+     },
+     list() { load();return structuredClone([...records.values()]); },
+diff --git a/src/mcp.mjs b/src/mcp.mjs
+index 60d8f9b..84c3dbd 100644
+--- a/src/mcp.mjs
++++ b/src/mcp.mjs
+@@ -15,8 +15,8 @@ import { inspectRunningSoftware } from './processes.mjs';
+ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+ import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from '@modelcontextprotocol/ext-apps/server';
+ export const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+-export const workspace = (taskId) => {
+-  const marked=locations.list();const task=taskId?getTaskSoftware(taskId):null;
++export const workspace = (taskId,marked=locations.list()) => {
++ const task=taskId?getTaskSoftware(taskId):null;
+   const relevant=task?task.requirements.filter(r=>r.resolution.status==='resolved').map(r=>({...getSoftware(r.resolution.softwareId),taskRequirementId:r.requirementId,version:r.selectedInstallation?.version||undefined,selectedInstallation:r.selectedInstallation})):listSoftware();
+   return { product:'生信小助手',version:'0.1.0',scope:task?'task_software_list':'software_catalog',task,
+     software:relevant.map(s=>{const materials=getMaterials({id:s.id,version:s.version});return {...s,locations:marked.filter(l=>l.kind==='software'&&l.softwareId===s.id),citations:materials.citations,materials,materialWarnings:materials.warnings};}),
+@@ -95,7 +95,7 @@ export function createMcpServer() {
+     title: '打开生信小助手', description: '显示生信小助手工作台，查看已登记软件、版本资料和论文引用。登记不代表本机已安装；不执行分析。',
+     inputSchema: {taskId:z.string().max(100).optional()}, annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+     _meta: { ui: { resourceUri: uri }, 'openai/outputTemplate': uri },
+-  }, async ({taskId}) => {await locations.refresh();return { content: [{ type: 'text', text: '已打开软件资料目录。本机安装与分析能力需单独核验。' }], structuredContent: workspace(taskId) };});
++  }, async ({taskId}) => {const marked=await locations.refresh();return { content: [{ type: 'text', text: '已打开软件资料目录。本机安装与分析能力需单独核验。' }], structuredContent: workspace(taskId,marked) };});
+   server.registerTool('list_software', {
+     description: '查询已核验的软件资料、论文引用和官方地址，不代表已安装或已适配。不匹配时返回空列表。',
+     inputSchema: { query: z.string().max(200).optional() },
+diff --git a/src/preview.mjs b/src/preview.mjs
+index 597f8a2..b11de60 100644
+--- a/src/preview.mjs
++++ b/src/preview.mjs
+@@ -1,6 +1,7 @@
+ import { createServer } from 'node:http';
+ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+ import { createMcpServer, html, workspace } from './mcp.mjs';
++import {locations} from './locations.mjs';
+ const port = Number(process.env.PORT || 8787);
+ createServer(async (req, res) => {
+   const host = req.headers.host?.split(':')[0];
+@@ -8,7 +9,7 @@ createServer(async (req, res) => {
+   if (req.headers.origin && ![`http://127.0.0.1:${port}`, `http://localhost:${port}`].includes(req.headers.origin)) {res.writeHead(403).end();return;}
+   const route = new URL(req.url, 'http://localhost').pathname;
+   if(req.method === 'GET' && route === '/') {res.writeHead(200, {'Content-Type':'text/html; charset=utf-8'}).end(html);return;}
+-  if(req.method === 'GET' && route === '/api/workspace') {res.writeHead(200, {'Content-Type':'application/json; charset=utf-8'}).end(JSON.stringify(workspace()));return;}
++  if(req.method === 'GET' && route === '/api/workspace') {res.writeHead(200, {'Content-Type':'application/json; charset=utf-8'}).end(JSON.stringify(workspace(undefined,await locations.refresh())));return;}
+   if(route !== '/mcp') {res.writeHead(404).end();return;}
+   const server = createMcpServer();
+   const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
+diff --git a/test/locations.test.mjs b/test/locations.test.mjs
+index c978e78..f64ef46 100644
+--- a/test/locations.test.mjs
++++ b/test/locations.test.mjs
+@@ -22,3 +22,11 @@ test('deleted or unreadable output cannot trigger Explorer and launch failure is
+  assert.equal((await revealLocation('D:/x',{platform:'win32',stat:async()=>file,launch:async()=>{throw Error('spawn failed')}})).status,'reveal_failed');
+  assert.equal((await revealLocation('D:/x',{platform:'linux'})).status,'unsupported_platform');
+ });
++
++test('output timestamps come from filesystem metadata and are never inferred completion times',async()=>{
++ const created=Date.parse('2026-10-19T02:00:12.123Z'),modified=Date.parse('2026-10-19T02:43:27.456Z');
++ const result=await describeLocation('D:/results/alignment.fasta',{stat:async()=>({...file,birthtimeMs:created,mtimeMs:modified})});
++ assert.equal(result.fileCreatedAt,'2026-10-19T02:00:12.123Z');assert.equal(result.fileModifiedAt,'2026-10-19T02:43:27.456Z');assert.equal(result.fileTimestampsSource,'filesystem_stat');assert.equal(result.completedAt,undefined);
++ const absent=await describeLocation('D:/missing.fasta',{stat:async()=>{throw Object.assign(Error(),{code:'ENOENT'})}});assert.equal(absent.fileModifiedAt,undefined);assert.equal(absent.exists,false);
++ const unknown=await describeLocation('D:/results/no-times.txt',{stat:async()=>file});assert.equal(unknown.fileModifiedAt,null);
++});
+diff --git a/test/mcp.test.mjs b/test/mcp.test.mjs
+index f1d7585..9f2c549 100644
+--- a/test/mcp.test.mjs
++++ b/test/mcp.test.mjs
+@@ -1,4 +1,4 @@
+-import {mkdtempSync} from 'node:fs';
++import {mkdtempSync,statSync} from 'node:fs';
+ import os from 'node:os';
+ import path from 'node:path';
+ import test from 'node:test';
+@@ -18,7 +18,7 @@ test('stdio tools expose curated software, local inspection and interactive reso
+  if(process.env.BIOINFO_TEST_OUTPUT){
+   const marked=await client.callTool({name:'record_file_location',arguments:{path:process.env.BIOINFO_TEST_OUTPUT,kind:'output',label:'Integration output fixture',taskId:'test-only'}});assert.equal(marked.structuredContent.location.status,'file');
+   const listed=await client.callTool({name:'list_file_locations',arguments:{}});assert.ok(listed.structuredContent.locations.some(r=>r.kind==='output'&&r.status==='file'));
+-  const view=await client.callTool({name:'open_bioinfo_assistant',arguments:{}});assert.ok(view.structuredContent.outputLocations.some(r=>r.taskId==='test-only'));
++  const view=await client.callTool({name:'open_bioinfo_assistant',arguments:{}});assert.ok(view.structuredContent.outputLocations.some(r=>r.taskId==='test-only'));const output=view.structuredContent.outputLocations.find(r=>r.taskId==='test-only');assert.equal(output.fileModifiedAt,statSync(process.env.BIOINFO_TEST_OUTPUT).mtime.toISOString());assert.equal(output.fileTimestampsSource,'filesystem_stat');assert.ok(output.recordedAt);assert.equal(output.status,'file');
+   if(process.env.BIOINFO_TEST_REVEAL==='1'){const revealed=await client.callTool({name:'reveal_path',arguments:{path:process.env.BIOINFO_TEST_OUTPUT}});assert.equal(revealed.structuredContent.location.status,'reveal_requested');}
+  }
+ 
