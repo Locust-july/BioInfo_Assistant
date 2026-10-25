@@ -15,16 +15,25 @@ import { inspectRunningSoftware } from './processes.mjs';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from '@modelcontextprotocol/ext-apps/server';
 export const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+function savedInspection(records) {
+ const candidates=records.filter(l=>l.status==='file').map(l=>({
+   ...(l.inspection || {id:l.softwareId,status:'found',identity:'unverified',version:null,applicationVersion:{status:'unknown',version:null},reason:'已保存的文件候选；请检测安装以核验身份和应用版本'}),
+   executablePath:l.path, savedCandidate:true,
+ }));
+ if(!candidates.length)return undefined;
+ const first=candidates.find(c=>['metadata_match','application_resource_match'].includes(c.identity)) || candidates[0];
+ return {...first,candidates};
+}
 export const workspace = (taskId,marked=locations.list()) => {
  const task=taskId?getTaskSoftware(taskId):null;
   const relevant=task?task.requirements.filter(r=>r.resolution.status==='resolved').map(r=>({...getSoftware(r.resolution.softwareId),taskRequirementId:r.requirementId,version:r.selectedInstallation?.version||undefined,selectedInstallation:r.selectedInstallation})):listSoftware();
   return { product:'生信小助手',version:'0.1.0',scope:task?'task_software_list':'software_catalog',task,
-    software:relevant.map(s=>{const materials=getMaterials({id:s.id,version:s.version});return {...s,locations:marked.filter(l=>l.kind==='software'&&l.softwareId===s.id),citations:materials.citations,materials,materialWarnings:materials.warnings};}),
+    software:relevant.map(s=>{const saved=marked.filter(l=>l.kind==='software'&&l.softwareId===s.id);const inspection=savedInspection(saved);const materials=getMaterials({id:s.id,version:s.version || inspection?.version});return {...s,inspection,locations:saved,citations:materials.citations,materials,materialWarnings:materials.warnings};}),
     outputLocations:marked.filter(l=>l.kind==='output'),tasks:[],analysisAvailable:false };
 };
 function rememberCandidates(candidates) {
   for(const c of candidates || []) if(c.executablePath && c.id) locations.record({kind:'software',softwareId:c.id,path:c.executablePath,
-    label:c.name || c.id,source:'detected_candidate',identity:c.identity || 'unverified',version:c.version || null});
+    label:c.name || c.id,source:'detected_candidate',identity:c.identity || 'unverified',version:c.version || null,inspection:{...c,candidates:undefined}});
 }
 export function createMcpServer() {
   const server = new McpServer({ name: 'bioinfo-assistant', version: '0.1.0' });
@@ -106,7 +115,7 @@ export function createMcpServer() {
     inputSchema: { id: z.string().max(80), executablePath: z.string().max(4096).optional(),allInstallations:z.boolean().optional() },
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
   }, async ({ id, executablePath, allInstallations }) => {
-    try { const inspection = await inspectSoftware(id, executablePath,{collectAll:allInstallations}); rememberCandidates(inspection.candidates); return { content: [{ type: 'text', text: JSON.stringify(inspection) }], structuredContent: { inspection } }; }
+    try { const knownPaths=executablePath?[]:(await locations.refresh()).filter(l=>l.kind==='software'&&l.softwareId===id&&l.status==='file').map(l=>l.path);const inspection = await inspectSoftware(id, executablePath,{collectAll:allInstallations,knownPaths}); rememberCandidates(inspection.candidates); return { content: [{ type: 'text', text: JSON.stringify(inspection) }], structuredContent: { inspection } }; }
     catch (e) { return { isError: true, content: [{ type: 'text', text: e.message }] }; }
   });
   return server;
