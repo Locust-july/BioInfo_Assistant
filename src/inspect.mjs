@@ -13,6 +13,7 @@ export async function inspectSoftware(id, executablePath, options = {}) {
   const env = options.env ?? process.env;
   const roots = [env.ProgramFiles, env['ProgramFiles(x86)'], env.LOCALAPPDATA && path.join(env.LOCALAPPDATA, 'Programs')].filter(Boolean);
   const candidates = [...new Set(executablePath ? [executablePath] : [
+    ...(options.knownPaths || []).filter(file=>path.isAbsolute(file)&&['.exe','.jar','.bat','.cmd'].includes(path.extname(file).toLowerCase())).slice(0,20),
     ...(env.PATH || '').split(path.delimiter).filter(Boolean).flatMap(dir => software.executableNames.map(name => path.join(dir.replace(/^"|"$/g, ''), name))),
     ...roots.flatMap(root => software.executableNames.map(name => path.join(root, software.name, name))),
   ])];
