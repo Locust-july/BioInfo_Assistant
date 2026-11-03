@@ -40,11 +40,22 @@ export async function revealLocation(value, options = {}) {
 
 function fingerprint(info) { return {dev:String(info.dev),ino:String(info.ino),birthtimeMs:String(info.birthtimeMs)}; }
 function sameFile(a,b){return a && b && a.ino!=='0' && a.dev===b.dev && a.ino===b.ino && a.birthtimeMs===b.birthtimeMs;}
+function lastKnownTimes(record){
+  // Legacy records captured identity and stat times together at record()/relocation.
+  const verified=record.fileIdentity&&record.fileTimestampsSource==='filesystem_stat';
+  return {fileCreatedAt:verified?record.fileCreatedAt??null:null,fileModifiedAt:verified?record.fileModifiedAt??null:null,fileTimestampsSource:'filesystem_stat',fileTimestampsCheckedAt:verified?(record.fileTimestampsCheckedAt||record.recordedAt||null):null,fileTimestampsStatus:verified?'last_known_identity_verified':'unknown'};
+}
 // Per-record atomic files preserve unrelated updates from concurrent plugin processes.
 export function createLocationRegistry({directory} = {}) {
   const records = new Map();
   function load(){if(!directory || !existsSync(directory))return;for(const name of readdirSync(directory).filter(n=>/^[a-f0-9]{64}\.json$/.test(n))){const data=JSON.parse(readFileSync(path.join(directory,name),'utf8'));normalizeLocation(data.path);records.set(name.slice(0,-5),data);}}
   function save(key,value){if(!directory)return;mkdirSync(directory,{recursive:true});const temp=path.join(directory,key+'.'+randomUUID()+'.tmp');writeFileSync(temp,JSON.stringify(value,null,2),'utf8');renameSync(temp,path.join(directory,key+'.json'));}
+  function changedRecord(record){
+    const key=record.locationId,filename=directory&&path.join(directory,key+'.json');
+    if(filename&&existsSync(filename)){const data=JSON.parse(readFileSync(filename,'utf8'));normalizeLocation(data.path);records.set(key,data);}
+    const latest=records.get(key);
+    return JSON.stringify(latest)===JSON.stringify(record)?null:structuredClone(latest);
+  }
   return {
     record(record) {
       load();
@@ -53,7 +64,7 @@ export function createLocationRegistry({directory} = {}) {
       const key=record.locationId || duplicate?.[0] || createHash('sha256').update([record.kind,record.softwareId || '',record.taskId || '',target.toLowerCase()].join('|')).digest('hex');
       if(!/^[a-f0-9]{64}$/.test(key))throw Error('位置标识无效');
       if(!records.has(key) && records.size>=500) throw Error('本机位置标注达到 500 条上限');
-      let identity=record.fileIdentity,times={};try{const info=statSync(target,{bigint:true});identity=fingerprint(info);times=fileTimes(info);}catch{}
+      let identity,times={fileCreatedAt:null,fileModifiedAt:null,fileTimestampsSource:'filesystem_stat',fileTimestampsStatus:'unknown',fileTimestampsCheckedAt:null};try{const info=statSync(target,{bigint:true});identity=fingerprint(info);times={...fileTimes(info),fileTimestampsStatus:'current_identity_verified',fileTimestampsCheckedAt:new Date().toISOString()};}catch{}
       const trackingRoot=normalizeLocation(record.trackingRoot || path.win32.dirname(target));
       const relative=path.win32.relative(trackingRoot,target);if(relative.startsWith('..')||path.win32.isAbsolute(relative))throw Error('标注路径必须位于追踪目录内');
       if(path.win32.parse(trackingRoot).root===trackingRoot)throw Error('追踪目录不能是整个盘符，请选择软件/项目文件夹');
@@ -63,13 +74,25 @@ export function createLocationRegistry({directory} = {}) {
     list() { load();return structuredClone([...records.values()]); },
     async refresh() {
       const result=[];let remaining=5000;
-      for(const record of this.list()){
-        const checked=await describeLocation(record.path);
+      for(let record of this.list()){
+       let retries=0;
+       while(true){
+        if(retries++>3)throw Error('位置标注持续变化，请稍后重试刷新');
+        let info;
+        const checked=await describeLocation(record.path,{stat:async target=>{info=await stat(target,{bigint:true});return info;}});
+        // A relink or annotation edit may have completed while filesystem work yielded.
+        const newer=changedRecord(record);if(newer){record=newer;continue;}
         if(checked.exists){
-          const identity=fingerprint(await stat(record.path,{bigint:true}));
-          result.push({...record,...checked,...(record.fileIdentity&&!sameFile(record.fileIdentity,identity)?{status:'replaced',reason:'原路径现为另一文件，请重新选择确认'}:{})});continue;
+          const identity=fingerprint(info);
+          if(record.fileIdentity&&!sameFile(record.fileIdentity,identity)){
+            result.push({...record,...checked,...lastKnownTimes(record),status:'replaced',reason:'原路径现为另一文件，请重新选择确认；文件时间仅保留原文件最后已确认快照，未取得时为未知'});
+          }else{
+            const snapshot={...record,...fileTimes(info),fileIdentity:identity,fileTimestampsStatus:'current_identity_verified',fileTimestampsCheckedAt:checked.checkedAt};
+            if(JSON.stringify([record.fileIdentity,record.fileCreatedAt,record.fileModifiedAt])!==JSON.stringify([snapshot.fileIdentity,snapshot.fileCreatedAt,snapshot.fileModifiedAt])){save(record.locationId,snapshot);records.set(record.locationId,snapshot);}
+            result.push({...snapshot,...checked});
+          }break;
         }
-        if(checked.status!=='missing'){result.push({...record,...checked});continue;}
+        if(checked.status!=='missing'){result.push({...record,...checked,...lastKnownTimes(record)});break;}
         let count=0,truncated=false;const matches=[];
         async function walk(dir,depth){
           if(remaining<=0){truncated=true;return;}
@@ -81,8 +104,15 @@ export function createLocationRegistry({directory} = {}) {
           }}catch{}
         }
         if(record.fileIdentity)await walk(record.trackingRoot,0);
-        if(matches.length===1&&!truncated){const moved=this.record({...record,path:matches[0],previousPath:record.path});result.push({...moved,...await describeLocation(moved.path),trackingStatus:'relocated'});}
-        else result.push({...record,...checked,trackingStatus:truncated?'search_limit':matches.length>1?'ambiguous':'manual_relink_required',reason:'未能在追踪目录内唯一找回原文件，请重新选择位置'});
+        const afterSearch=changedRecord(record);if(afterSearch){record=afterSearch;continue;}
+        if(matches.length===1&&!truncated){
+          const moved=this.record({...record,path:matches[0],previousPath:record.path}),described=await describeLocation(moved.path);
+          const afterMove=changedRecord(moved);if(afterMove){record=afterMove;continue;}
+          result.push({...moved,...described,trackingStatus:'relocated'});
+        }
+        else result.push({...record,...checked,...lastKnownTimes(record),trackingStatus:truncated?'search_limit':matches.length>1?'ambiguous':'manual_relink_required',reason:'未能在追踪目录内唯一找回原文件，请重新选择位置'});
+        break;
+       }
       }
       return result;
     },

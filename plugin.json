@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "bioinfo-assistant",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "description": "生信小助手：软件、版本、引用与任务工作台",
   "extensions": {
     "com.openai": {

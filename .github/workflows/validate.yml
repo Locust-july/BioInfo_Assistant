@@ -18,4 +18,4 @@ jobs:
         shell: pwsh
         run: |
           $env:BIOINFO_TEST_SERVER = 'dist/server.mjs'
-          node --test test/mcp.test.mjs
+          node --test test/mcp.test.mjs test/task-tools.test.mjs test/detection-flow.test.mjs test/location-time-mcp.test.mjs
