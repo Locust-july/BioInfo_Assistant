@@ -39,6 +39,7 @@ test('stdio tools expose curated software, local inspection and interactive reso
  assert.equal(result.structuredContent.analysisAvailable,false);
  const resource=await client.readResource({uri:tool._meta.ui.resourceUri});
  assert.match(resource.contents[0].mimeType,/text\/html/);
+ assert.deepEqual(resource.contents[0]._meta?.['openai/ui']?.availableDisplayModes,['fullscreen']);
  assert.match(resource.contents[0].text,/生信小助手/);
  assert.match(resource.contents[0].text,/ui\/initialize/);
  } finally {await client.close();}

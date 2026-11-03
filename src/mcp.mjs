@@ -99,7 +99,7 @@ export function createMcpServer() {
     try { const discovery = await discoverSoftware(roots); rememberCandidates(discovery.candidates); return { content: [{ type: 'text', text: JSON.stringify(discovery) }], structuredContent: { discovery } }; }
     catch (e) { return { isError: true, content: [{ type: 'text', text: e.message }] }; }
   });
-  registerAppResource(server, 'workspace', uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE, text: html }] }));
+  registerAppResource(server, 'workspace', uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE, text: html, _meta: { "openai/ui": { availableDisplayModes: ["fullscreen"] } } }] }));
   registerAppTool(server, 'open_bioinfo_assistant', {
     title: '打开生信小助手', description: '显示生信小助手工作台，查看已登记软件、版本资料和论文引用。登记不代表本机已安装；不执行分析。',
     inputSchema: {taskId:z.string().max(100).optional()}, annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
